@@ -7,7 +7,7 @@ const BudgetForm = ({ onSave }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch('http://localhost:5000/budgets', {
+      await fetch('https://financia-visualizer.onrender.com/budgets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category, amount: parseFloat(amount) }),
