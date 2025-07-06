@@ -1,4 +1,3 @@
-// src/components/TransactionList.js
 import React from 'react';
 
 const TransactionList = ({ transactions, onDelete }) => {
@@ -6,11 +5,19 @@ const TransactionList = ({ transactions, onDelete }) => {
   const last30Days = new Date();
   last30Days.setDate(today.getDate() - 30);
 
-  // Filter only the transactions from the last 30 days
   const recentTransactions = transactions.filter(tx => {
     const txDate = new Date(tx.date);
     return txDate >= last30Days && txDate <= today;
   });
+
+  async function handleDelete(id) {
+    if (window.confirm('Are you sure you want to delete this transaction?')) {
+      await fetch(`https://financia-visualizer.onrender.com/transactions/${id}`, {
+        method: 'DELETE',
+      });
+      onDelete();
+    }
+  }
 
   return (
     <div style={{ marginTop: '40px' }}>
@@ -45,15 +52,6 @@ const TransactionList = ({ transactions, onDelete }) => {
       )}
     </div>
   );
-
-  async function handleDelete(id) {
-    if (window.confirm('Are you sure you want to delete this transaction?')) {
-      await fetch(`http://localhost:5000/transactions/${id}`, {
-        method: 'DELETE',
-      });
-      onDelete(); // Refresh list
-    }
-  }
 };
 
 export default TransactionList;

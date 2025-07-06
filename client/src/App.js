@@ -15,11 +15,11 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const txRes = await fetch('http://localhost:5000/transactions');
+      const txRes = await fetch('https://financia-visualizer.onrender.com/transactions');
       const txData = await txRes.json();
       setTransactions(txData);
 
-      const budgetRes = await fetch('http://localhost:5000/budgets');
+      const budgetRes = await fetch('https://financia-visualizer.onrender.com/budgets');
       const budgetData = await budgetRes.json();
       setBudgets(budgetData);
     };
@@ -59,7 +59,6 @@ const App = () => {
 
       <TransactionForm onAdd={() => window.location.reload()} />
 
-      {/* Month & Year Selectors */}
       <div style={{ margin: '20px 0', display: 'flex', gap: '15px' }}>
         <div>
           <label>Select Month: </label>
@@ -86,7 +85,6 @@ const App = () => {
         </div>
       </div>
 
-      {/* 📢 Description */}
       <div style={{ margin: '10px 0', fontWeight: 'bold' }}>
         {selectedMonth || selectedYear ? (
           <div>
