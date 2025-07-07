@@ -8,16 +8,15 @@ const budgetRoutes = require('./routes/budgets');
 
 const app = express();
 
-// ✅ Allow both production and preview Vercel URLs
+// ✅ Allow all Vercel frontend URLs
 const allowedOrigins = [
   'https://financia-visualizer-f2gl.vercel.app',
-  'https://financia-visualizer-f2gl-git-main-siddarthas-projects-b806b847.vercel.app' // Vercel preview
+  'https://financia-visualizer-f2gl-git-main-siddarthas-projects-b806b847.vercel.app',
+  'https://financia-visualizer-f2gl-ou9qswaif-siddarthas-projects-b806b847.vercel.app'
 ];
 
-// ✅ CORS configuration
 app.use(cors({
   origin: function (origin, callback) {
-    // ✅ Allow requests with no origin (like curl/Postman) or if origin is in the whitelist
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -26,7 +25,7 @@ app.use(cors({
     }
   },
   methods: ['GET', 'POST', 'DELETE'],
-  credentials: true, // Optional: useful if you ever send cookies or auth headers
+  credentials: true,
   allowedHeaders: ['Content-Type']
 }));
 
@@ -46,7 +45,7 @@ mongoose.connect(process.env.MONGO_URI)
     console.error('❌ MongoDB connection error:', err);
   });
 
-// ✅ Optional: Seeding route for testing
+// ✅ Optional seed route
 app.get('/seed-budgets', async (req, res) => {
   const Budget = require('./models/Budget');
   try {

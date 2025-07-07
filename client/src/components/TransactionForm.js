@@ -10,6 +10,7 @@ const TransactionForm = ({ onAdd }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const description = selectedDesc === 'Other' ? customDesc.trim() : selectedDesc;
     const category = selectedDesc === 'Other' ? 'Other' : selectedDesc;
 
@@ -22,8 +23,10 @@ const TransactionForm = ({ onAdd }) => {
       description,
       category,
       amount: parseFloat(amount),
-      date
+      date: new Date(date).toISOString() // Ensure consistent format
     };
+
+    console.log('📤 Submitting:', newTransaction); // Debug log
 
     try {
       const res = await fetch('https://financia-visualizer.onrender.com/transactions', {
@@ -32,16 +35,22 @@ const TransactionForm = ({ onAdd }) => {
         body: JSON.stringify(newTransaction),
       });
 
-      if (!res.ok) throw new Error('Failed to add transaction');
+      const resText = await res.text();
+      console.log('✅ Server Response:', res.status, resText);
+
+      if (!res.ok) {
+        throw new Error(`Server error (${res.status}): ${resText}`);
+      }
 
       setSelectedDesc('Food');
       setCustomDesc('');
       setAmount('');
       setDate('');
+
       if (onAdd) onAdd();
     } catch (err) {
-      console.error(err);
-      alert('Error adding transaction');
+      console.error('❌ Error adding transaction:', err);
+      alert(`Error adding transaction: ${err.message}`);
     }
   };
 
@@ -58,6 +67,7 @@ const TransactionForm = ({ onAdd }) => {
           placeholder="Enter custom description"
           value={customDesc}
           onChange={(e) => setCustomDesc(e.target.value)}
+          required
         />
       )}
 
