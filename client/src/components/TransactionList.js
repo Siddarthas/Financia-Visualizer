@@ -10,9 +10,11 @@ const TransactionList = ({ transactions, onDelete }) => {
     return txDate >= last30Days && txDate <= today;
   });
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   async function handleDelete(id) {
     if (window.confirm('Are you sure you want to delete this transaction?')) {
-      await fetch(`https://financia-visualizer.onrender.com/transactions/${id}`, {
+      await fetch(`${API_URL}/transactions/${id}`, {
         method: 'DELETE',
       });
       onDelete();

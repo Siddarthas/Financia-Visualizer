@@ -5,6 +5,8 @@ const BudgetForm = ({ onSave }) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -15,7 +17,7 @@ const BudgetForm = ({ onSave }) => {
 
     setLoading(true);
     try {
-      const res = await fetch('https://financia-visualizer.onrender.com/budgets', {
+      const res = await fetch(`${API_URL}/budgets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category, amount: parseFloat(amount) }),

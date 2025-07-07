@@ -39,6 +39,17 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
+## Environment Variables
+
+Create a `.env` file in the `client/` directory with the following:
+
+```
+REACT_APP_API_URL=https://financia-visualizer.onrender.com
+```
+
+- For local development, you can set this to your local backend URL (e.g., http://localhost:5000).
+- For production, set it to your deployed backend URL.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).

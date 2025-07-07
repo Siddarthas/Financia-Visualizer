@@ -17,7 +17,11 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      origin.endsWith('.vercel.app') ||
+      origin === 'https://financia-visualizer.onrender.com'
+    ) {
       callback(null, true);
     } else {
       console.log('❌ CORS blocked origin:', origin);

@@ -15,11 +15,12 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const txRes = await fetch('https://financia-visualizer.onrender.com/transactions');
+      const API_URL = process.env.REACT_APP_API_URL;
+      const txRes = await fetch(`${API_URL}/transactions`);
       const txData = await txRes.json();
       setTransactions(txData);
 
-      const budgetRes = await fetch('https://financia-visualizer.onrender.com/budgets');
+      const budgetRes = await fetch(`${API_URL}/budgets`);
       const budgetData = await budgetRes.json();
       setBudgets(budgetData);
     };

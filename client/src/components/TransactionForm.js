@@ -8,6 +8,8 @@ const TransactionForm = ({ onAdd }) => {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -29,7 +31,7 @@ const TransactionForm = ({ onAdd }) => {
     console.log('📤 Submitting:', newTransaction); // Debug log
 
     try {
-      const res = await fetch('https://financia-visualizer.onrender.com/transactions', {
+      const res = await fetch(`${API_URL}/transactions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTransaction),
