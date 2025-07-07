@@ -11,19 +11,22 @@ const app = express();
 // ✅ Allow both production and preview Vercel URLs
 const allowedOrigins = [
   'https://financia-visualizer-f2gl.vercel.app',
-  'https://financia-visualizer-f2gl-git-main-siddarthas-projects-b806b847.vercel.app' // preview link
+  'https://financia-visualizer-f2gl-git-main-siddarthas-projects-b806b847.vercel.app' // Vercel preview
 ];
 
+// ✅ CORS configuration
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like Postman) or from allowedOrigins
+    // ✅ Allow requests with no origin (like curl/Postman) or if origin is in the whitelist
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('❌ CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'DELETE'],
+  credentials: true, // Optional: useful if you ever send cookies or auth headers
   allowedHeaders: ['Content-Type']
 }));
 
@@ -33,7 +36,7 @@ app.use(express.json());
 app.use('/transactions', transactionRoutes);
 app.use('/budgets', budgetRoutes);
 
-// ✅ MongoDB Connection
+// ✅ MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     const PORT = process.env.PORT || 5000;
@@ -43,7 +46,7 @@ mongoose.connect(process.env.MONGO_URI)
     console.error('❌ MongoDB connection error:', err);
   });
 
-// ✅ Optional: Budget seeding route
+// ✅ Optional: Seeding route for testing
 app.get('/seed-budgets', async (req, res) => {
   const Budget = require('./models/Budget');
   try {
