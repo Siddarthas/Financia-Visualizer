@@ -8,33 +8,30 @@ const budgetRoutes = require('./routes/budgets');
 
 const app = express();
 
-// CORS setup
+// ✅ CORS setup (allow only your frontend domain for security)
 app.use(cors({
-  origin: '*', // You can specify your frontend URL here instead of '*'
+  origin: 'https://financia-visualizer-f2gl.vercel.app', // <-- ✅ change to your deployed frontend
   methods: ['GET', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type']
 }));
 
 app.use(express.json());
 
-// Routes
+// ✅ Routes
 app.use('/transactions', transactionRoutes);
 app.use('/budgets', budgetRoutes);
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  const PORT = process.env.PORT || 5000; // ✅ Use dynamic port for Render
-  app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-})
-.catch(err => {
-  console.error('❌ MongoDB connection error:', err);
-});
+// ✅ MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+  })
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+  });
 
-// Optional budget seeding route
+// ✅ Optional seeding route (safe to keep for testing)
 app.get('/seed-budgets', async (req, res) => {
   const Budget = require('./models/Budget');
   try {
