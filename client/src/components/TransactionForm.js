@@ -7,52 +7,55 @@ const TransactionForm = ({ onAdd }) => {
   const [customDesc, setCustomDesc] = useState('');
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const API_URL = process.env.REACT_APP_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const description = selectedDesc === 'Other' ? customDesc.trim() : selectedDesc;
-    const category = selectedDesc === 'Other' ? 'Other' : selectedDesc;
-
-    if (!description || !amount || !date) {
-      alert('Please fill all fields.');
-      return;
-    }
-
-    const newTransaction = {
-      description,
-      category,
-      amount: parseFloat(amount),
-      date: new Date(date).toISOString() // Ensure consistent format
-    };
-
-    console.log('📤 Submitting:', newTransaction); // Debug log
-
+    setLoading(true);
+    setError('');
     try {
+      const description = selectedDesc === 'Other' ? customDesc.trim() : selectedDesc;
+      const category = selectedDesc === 'Other' ? 'Other' : selectedDesc;
+
+      if (!description || !amount || !date) {
+        throw new Error('Please fill all fields.');
+      }
+
+      const newTransaction = {
+        description,
+        category,
+        amount: parseFloat(amount),
+        date: new Date(date).toISOString() // Ensure consistent format
+      };
+
+      console.log('📤 Submitting:', newTransaction); // Debug log
+
       const res = await fetch(`${API_URL}/transactions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTransaction),
       });
 
-      const resText = await res.text();
-      console.log('✅ Server Response:', res.status, resText);
-
       if (!res.ok) {
-        throw new Error(`Server error (${res.status}): ${resText}`);
+        const text = await res.text();
+        throw new Error(`Server error (${res.status}): ${text}`);
       }
-
+      const data = await res.json();
+      console.log('✅ Server Response:', data);
+      onAdd(data);
       setSelectedDesc('Food');
       setCustomDesc('');
       setAmount('');
       setDate('');
-
-      if (onAdd) onAdd();
-    } catch (err) {
-      console.error('❌ Error adding transaction:', err);
-      alert(`Error adding transaction: ${err.message}`);
+    } catch (error) {
+      console.error('❌ Error adding transaction:', error);
+      setError('Error adding transaction: ' + error.message);
+      alert('Error adding transaction: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
